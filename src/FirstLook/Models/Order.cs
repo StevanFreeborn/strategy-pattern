@@ -1,3 +1,5 @@
+using FirstLook.Strategies.SalesTax;
+
 namespace FirstLook.Models;
 
 class Order
@@ -5,43 +7,28 @@ class Order
   public ShippingDetails ShippingDetails { get; init; } = new ShippingDetails();
   public List<LineItem> LineItems { get; init; } = [];
   public decimal Total => LineItems.Sum(x => x.price);
-  private bool IsGoingToSweden => string.Equals(
-    ShippingDetails.DestinationCountry, 
-    "Sweden", 
-    StringComparison.InvariantCultureIgnoreCase
-  );
+  public ISalesTaxStrategy? SalesTaxStrategy { get; init; } = null;
 
-  private bool IsDomestic => string.Equals(
+  public bool IsDomestic => string.Equals(
     ShippingDetails.OriginCountry, 
     ShippingDetails.DestinationCountry, 
     StringComparison.InvariantCultureIgnoreCase
   );
 
-  private bool IsGoingToUS => string.Equals(
+  public bool IsGoingTo(string dest) => string.Equals(
     ShippingDetails.DestinationCountry, 
-    "us", 
+    dest, 
     StringComparison.InvariantCultureIgnoreCase
   );
 
   public decimal GetTax()
   {
-    if (IsGoingToSweden && IsDomestic)
+    if (SalesTaxStrategy is null)
     {
-      return Total * 0.25m;
+      throw new InvalidOperationException("Unable to calculate tax. Sales tax strategy is null.");
     }
 
-    if (IsGoingToUS)
-    {
-      return ShippingDetails.DestinationState switch
-      {
-        "la" => Total * 0.095m,
-        "ny" => Total * 0.04m,
-        "nyc" => Total * 0.045m,
-        _ => 0m,
-      };
-    }
-
-    return 0m;
+    return SalesTaxStrategy.GetTaxForOrder(this);
   }
 }
 

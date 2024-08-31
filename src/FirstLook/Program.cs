@@ -1,14 +1,13 @@
-﻿using FirstLook.Models;
-
-var order = new Order()
+﻿var order = new Order()
 {
+  SalesTaxStrategy = new SwedenSalesTaxStrategy(),
   ShippingDetails = new ShippingDetails()
   {
     OriginCountry = "Sweden",
     DestinationCountry = "Sweden",
   },
-  LineItems = new List<LineItem>()
-  {
+  LineItems =
+  [
     new LineItem()
     {
       Product = "Book",
@@ -21,7 +20,7 @@ var order = new Order()
       price = 100m,
       Type = ItemType.Service,
     },
-  },
+  ],
 };
 
 Console.WriteLine(order.GetTax());
