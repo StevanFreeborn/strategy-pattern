@@ -6,7 +6,7 @@ class Order
 {
   public ShippingDetails ShippingDetails { get; init; } = new ShippingDetails();
   public List<LineItem> LineItems { get; init; } = [];
-  public decimal Total => LineItems.Sum(x => x.price);
+  public decimal Total => LineItems.Sum(x => x.Price);
   public ISalesTaxStrategy? SalesTaxStrategy { get; init; } = null;
 
   public bool IsDomestic => string.Equals(
@@ -42,7 +42,7 @@ class ShippingDetails
 class LineItem
 {
   public string Product { get; init; } = string.Empty;
-  public decimal price { get; init; }  = 0;
+  public decimal Price { get; init; }  = 0;
   public ItemType Type { get; init; }
 }
 
@@ -50,4 +50,6 @@ enum ItemType
 {
   Literature,
   Service,
+  Food,
+  Hardware,
 }

@@ -11,6 +11,21 @@ class SwedenSalesTaxStrategy : ISalesTaxStrategy
       );
     }
 
-    return order.IsDomestic ? order.Total * 0.25m : 0m;
+    var totalTax = 0m;
+
+    foreach (var item in order.LineItems)
+    {
+      var taxRate = item.Type switch
+      {
+        ItemType.Food => 0.06m,
+        ItemType.Literature => 0.08m,
+        ItemType.Service or ItemType.Hardware => 0.25m,
+        _ => throw new InvalidOperationException("Invalid item type."),
+      };
+
+      totalTax += item.Price * taxRate * item.Price;
+    }
+
+    return totalTax;
   }
 }

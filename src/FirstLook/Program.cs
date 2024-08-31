@@ -11,13 +11,13 @@
     new LineItem()
     {
       Product = "Book",
-      price = 100m,
+      Price = 100m,
       Type = ItemType.Literature,
     },
     new LineItem()
     {
       Product = "Service",
-      price = 100m,
+      Price = 100m,
       Type = ItemType.Service,
     },
   ],
