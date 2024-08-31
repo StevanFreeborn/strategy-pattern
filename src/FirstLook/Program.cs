@@ -24,3 +24,4 @@
 };
 
 Console.WriteLine(order.GetTax());
+Console.WriteLine(order.GetTax(new SwedenSalesTaxStrategy()));

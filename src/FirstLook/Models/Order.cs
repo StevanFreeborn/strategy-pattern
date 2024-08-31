@@ -21,14 +21,16 @@ class Order
     StringComparison.InvariantCultureIgnoreCase
   );
 
-  public decimal GetTax()
+  public decimal GetTax(ISalesTaxStrategy? salesTaxStrategy = null)
   {
-    if (SalesTaxStrategy is null)
+    var strategy = salesTaxStrategy ?? SalesTaxStrategy;
+    
+    if (strategy is null)
     {
       throw new InvalidOperationException("Unable to calculate tax. Sales tax strategy is null.");
     }
 
-    return SalesTaxStrategy.GetTaxForOrder(this);
+    return strategy.GetTaxForOrder(this);
   }
 }
 
